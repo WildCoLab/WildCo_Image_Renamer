@@ -17,7 +17,7 @@ library(exifr)
 library(stringr)
 #install.packages("R.utils")
 library(R.utils)
-
+library(purrr)
 
 ################################
 ##### createStationFolders #####
@@ -118,4 +118,16 @@ for(i in 1:length(Folders))
 }
 
 # Check a folder to see if it has worked
+
+###### OPTIONAL EXTRA  ###################
+##########################################
+# Some users want to merge the nested folders into a single Deployment location folder (no nesting)
+# To do that, run the following code (assuming that the folder structure is Test_Images_Renamed/CameraStation/)
+
+to_organise <- list.files(path = renamed_location, recursive = T, full.names = F)
+organised <- paste0(unlist(map(strsplit(to_organise, "/"),1)),"/", mapply('[[', strsplit(to_organise, "/"), lengths(strsplit(to_organise, "/"))))
+# Remove files from this list that are already in the right location
+to_organise <- to_organise[to_organise!=organised]
+# Move the remaining files
+file.rename(paste0(renamed_location,"/", to_organise), paste0(renamed_location,"/",unlist(map(strsplit(to_organise, "/"),1)),"/", mapply('[[', strsplit(to_organise, "/"), lengths(strsplit(to_organise, "/")))) )                   
 
