@@ -5,10 +5,15 @@
 
 # ONLY RUN AFTER USING THE RENAMING TOOL #
 
+### Important question ####
+
+#Do you want to copy or extract your timelapse images? Uncomment the one ou want. Extract removes them, copy duplicates them.
+
+action <- "copy"   
+#action <- "extract"
+
 # YOU WILL NEED ADMINISTRATOR PRIVILEGES TO USE THIS SCRIPT #
-
 # Install perl prior to exifr installation from http://strawberryperl.com/
-
 # Install the exif tool from https://exiftool.org/
 
 #install.packages("exifr")
@@ -19,7 +24,8 @@ library(exifr)
 library(stringr)
 #install.packages("R.utils")
 library(R.utils)
-
+#install.packages("filesstrings")
+library(filesstrings)
 
 ################################
 ##### createStationFolders #####
@@ -31,10 +37,11 @@ getwd()
 
 # The following two must be edited if you want to use a new folder
 
-# Specify the folder images you want to rename (organised by station)
+# Specify the folder images you want to reference (organised by station)
 renamed_images <- "Test_Images_Renamed"
-# Specify the location you want the renamed images to go (originals are left untouched)
-timelapse_location <- "Timelapse_Images_to_be_sorted" 
+
+# Specify the location you want the timelapse images to go (originals are left untouched)
+timelapse_location <- "Timelapse_Images_only" 
 
 ################################
 ################################
@@ -65,14 +72,14 @@ Folders <- list.dirs(path = renamed_images,
 Folders <- Folders[Folders!=""]
 
 # Remove any hollow folders -> folders that don't contain images (e.g. if you are using nested folders, some folders will just contain directories)
+i <- 1
 
-i <- 5
 for(i in 1: length(Folders))
 {
   tmp <-  dir.exists(list.files(path = paste0(renamed_images, "//",Folders[i]),
                                 full.names = T, include.dirs = T))
   # Remove folders that just contain folders
-  if(length(tmp[tmp==TRUE])>0)
+  if(length(tmp[tmp==TRUE])==length(tmp))
   {
     Folders[i] <- "" 
   }
@@ -84,15 +91,14 @@ for(i in 1: length(Folders))
 }
 Folders <- Folders[Folders!=""]
 
-##### Image Move #####
+##### Image copying/extractor #####
 # Sometimes we have a lot of files and moving them can take a long time, so lets do this folder by folder 
 # This will enable you to see progress updates
-i <- 1
 for(i in 1:length(Folders))
 {
   # Read in the files
-  tmp.locs <- list.files(path = paste0(renamed_images, "//",Folders[i]),
-                         full.names = T, include.dirs = T)
+  tmp.locs <- list.files(path = paste0(renamed_images, "//",Folders[i]), pattern = c(".jpg", ".jpeg"),
+                         full.names = T, include.dirs = FALSE)
   
   tmp.sta <- gsub("\\__.*", "", sub('.*\\/', '', tmp.locs[1]))
   # Extract the sation ID and make a directory, but only if it doesnt already exists
@@ -103,8 +109,15 @@ for(i in 1:length(Folders))
   # Subset to just the timelapse
   tmp.exif <- read_exif(tmp.locs, tags = c("TriggerMode"), recursive = F, quiet = TRUE)
   tmp.exif <- tmp.exif[tmp.exif$TriggerMode=="T",]
-  file.copy(tmp.exif$SourceFile, paste0(timelapse_location, "//",tmp.sta))   #paste0(tmp.sta, "//",sub('.*\\/', '', tmp.exif$SourceFile))[1])
- 
+  
+  if(action=="copy")
+  {
+    file.copy(tmp.exif$SourceFile, paste0(timelapse_location, "//",tmp.sta))   
+  }
+  if(action=="extract")
+  {
+    file.move(tmp.exif$SourceFile, paste0(timelapse_location, "//",tmp.sta))   
+  }
   # Counter
   print(paste(i ,"Folders(s) extracted"))    
 }
