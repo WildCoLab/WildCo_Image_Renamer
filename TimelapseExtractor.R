@@ -7,7 +7,7 @@
 
 ### Important question ####
 
-#Do you want to copy or extract your timelapse images? Uncomment the one ou want. Extract removes them, copy duplicates them.
+#Do you want to copy or extract your timelapse images? Uncomment the one you want. Extract removes them, copy duplicates them.
 
 action <- "copy"   
 #action <- "extract"
