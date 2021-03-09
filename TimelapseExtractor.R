@@ -14,6 +14,8 @@ action <- "copy"
 
 # YOU WILL NEED ADMINISTRATOR PRIVILEGES TO USE THIS SCRIPT #
 # Install perl prior to exifr installation from http://strawberryperl.com/
+# Note there have been some issues with Macs, it may be better to not download perl and just use the standalone below:
+# OR
 # Install the exif tool from https://exiftool.org/
 
 #install.packages("exifr")
