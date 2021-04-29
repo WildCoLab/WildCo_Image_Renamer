@@ -184,6 +184,6 @@ for(i in 1: length(Folders))
 Folders <- Folders[Folders!=""]
 
 # Delete the empty folders
-unlink(paste0("Test_Renamed/", Folders), recursive = T, force = T)
+unlink(paste0(renamed_location, "/", Folders), recursive = T, force = T)
 
 
