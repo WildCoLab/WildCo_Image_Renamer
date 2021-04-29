@@ -12,5 +12,7 @@ Your photos should be organised in the same way as in the ‘Test_Images_Origina
 ### Important note
 It is crucial that the names of the images in the Wild3 database match the renamed files, this ensures rapid extraction of data subsets. Never rename files after they have been uploaded.
 
+If you plan to use Megadetector, or to blur human faces (using our script), rename the raw images prior to doing so.  
+
 ## Phenology
 To work with the extracted timelapse photos for phenology/vegetation extraction, refer to the "Z:\Advice & Resources\WildCo R Codes\Extracting_Veg_FromCamTrapTimelapseImgs"
