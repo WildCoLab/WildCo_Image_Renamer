@@ -31,8 +31,9 @@ getwd()
 
 # Specify the folder images you want to rename (organised by station)
 to_be_renamed <- "Test_Images_Original"
+
 # Specify the location you want the renamed images to go (originals are left untouched)
-renamed_location <- "Test_Images_Renamed" 
+renamed_location <- "Test_Renamed" 
 
 ################################
 ################################
@@ -64,7 +65,7 @@ Folders <- Folders[Folders!=""]
 for(i in 1: length(Folders))
 {
   tmp <-  dir.exists(list.files(path = paste0(renamed_location, "//",Folders[i]),
-                       full.names = T, include.dirs = T))
+                                full.names = T, include.dirs = T))
   # Remove folders that just contain folders
   if(length(tmp[tmp==TRUE])>0)
   {
@@ -86,7 +87,7 @@ for(i in 1:length(Folders))
 {
   # Read in the files
   tmp.locs <- list.files(path = paste0(renamed_location, "//",Folders[i]),
-                                      full.names = T, include.dirs = T)
+                         full.names = T, include.dirs = T)
   # Replace colons with dashes
   tmp.exif <- read_exif(tmp.locs, tags = c("DateTimeOriginal"), recursive = F, quiet = TRUE)
   tmp.exif$DateTimeOriginal <- str_replace_all(tmp.exif$DateTimeOriginal, ":", "-")
@@ -101,7 +102,7 @@ for(i in 1:length(Folders))
   # Subset to the unique values
   dups <- unique(dups)
   # For each duplicate add a counter
- 
+  
   if(length(dups) > 0)
   {
     for(j in 1:length(dups))
@@ -126,10 +127,43 @@ for(i in 1:length(Folders))
 
 # Uncomment and run the following:
 
-# to_organise <- list.files(path = renamed_location, recursive = T, full.names = F)
-# organised <- paste0(unlist(map(strsplit(to_organise, "/"),1)),"/", mapply('[[', strsplit(to_organise, "/"), lengths(strsplit(to_organise, "/"))))
-# # Remove files from this list that are already in the right location
-# to_organise <- to_organise[to_organise!=organised]
-# # Move the remaining files
-# file.rename(paste0(renamed_location,"/", to_organise), paste0(renamed_location,"/",unlist(map(strsplit(to_organise, "/"),1)),"/", mapply('[[', strsplit(to_organise, "/"), lengths(strsplit(to_organise, "/")))) )                   
+# Combines images in 100RCNX, 101RCNX, etc. folders into the CheckDate-CheckDate folder
+
+to_organise <- list.files(path = renamed_location, recursive = T, full.names = F)
+
+organised <- paste0(unlist(map(strsplit(to_organise, "/"),1)),"/",
+                    unlist(map(strsplit(to_organise, "/"),2)), "/", #adds date-date folders
+                    mapply('[[', strsplit(to_organise, "/"), 
+                           lengths(strsplit(to_organise, "/"))))
+
+# Remove files from this list that are already in the right location
+to_organise <- to_organise[to_organise!=organised]
+
+# Move the remaining files
+file.rename(paste0(renamed_location,"/", to_organise), #from
+            paste0(renamed_location,"/",
+                   unlist(map(strsplit(to_organise, "/"),1)),"/",
+                   unlist(map(strsplit(to_organise, "/"),2)), "/", #adds date-date folders
+                   mapply('[[', strsplit(to_organise, "/"), 
+                          lengths(strsplit(to_organise, "/")))))  
+
+### Remove empty 100RCNX, 101RCNX, etc. folders
+
+# Get paths for empty folders
+for(i in 1: length(Folders))
+{
+  tmp <-  dir.exists(list.files(path = paste0(renamed_location, "//", Folders[i]),
+                                full.names = T, include.dirs = T))
+  # Keep folders that don't contain anything
+  if(length(tmp)!=0)
+  {
+    Folders[i] <- ""
+  }
+}
+Folders <- Folders[Folders!=""]
+Folders
+
+# Delete the empty folders
+unlink(paste0("Test_Renamed/", Folders), recursive = T, force = T)
+
 
