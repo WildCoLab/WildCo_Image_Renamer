@@ -35,6 +35,15 @@ to_be_renamed <- "Test_Images_Original"
 # Specify the location you want the renamed images to go (originals are left untouched)
 renamed_location <- "Test_Renamed" 
 
+# IMPORTANT
+# Specify if your images are organised into check/deployment subfolders folders  which you want to 
+# preserve in your renamed data e.g RICH01/CheckDate1 and ALGAR01/CheckDate2
+keep_structure <- TRUE
+# NOTE - IF YOU USE THIS THEN ALL STATION FOLDERS MUST HAVE A NESTED CHECK/DEPLOYMENT FOLDER
+
+# If you want to remove that information and merge the images into one folder, specify FALSE
+#keep_structure <- FALSE
+
 ################################
 ################################
 
@@ -120,26 +129,38 @@ for(i in 1:length(Folders))
 
 # Check a folder to see if it has worked
 
-###### OPTIONAL EXTRA  ###################
+###### FOLDER CLEANUP  ###################
 ##########################################
-# Some users want to merge the nested folders into a single Deployment location folder (no nesting)
+# Some users want to merge the nested folders into a single Deployment location folder (no nesting),
+# Or want to remove subfolders caused by there being lots of images in a given folder (e.g 100RCNX, 101RCNX)
 # To do that, run the following code (assuming that the folder structure is Test_Images_Renamed/CameraStation/)
 
 # Uncomment and run the following:
 
-# Combines images in 100RCNX, 101RCNX, etc. folders into the CheckDate-CheckDate folder
+# Combines all images in 100RCNX, 101RCNX, etc. folders into the check/deployment folder
 
+# List of the files you want to organise
 to_organise <- list.files(path = renamed_location, recursive = T, full.names = F)
 
+if(keep_structure==TRUE){
+# A list how you want your files to be organised
 organised <- paste0(unlist(map(strsplit(to_organise, "/"),1)),"/",
                     unlist(map(strsplit(to_organise, "/"),2)), "/", #adds date-date folders
                     mapply('[[', strsplit(to_organise, "/"), 
                            lengths(strsplit(to_organise, "/"))))
+} 
+if(keep_structure==FALSE){
+  organised <- paste0(unlist(map(strsplit(to_organise, "/"),1)),"/", 
+                      mapply('[[', strsplit(to_organise, "/"), lengths(strsplit(to_organise, "/"))))
+  
+}
 
-# Remove files from this list that are already in the right location
+
+
+# Remove files from this list that are already organised in the right way
 to_organise <- to_organise[to_organise!=organised]
 
-# Move the remaining files
+# Move the remaining files to their new locations
 file.rename(paste0(renamed_location,"/", to_organise), #from
             paste0(renamed_location,"/",
                    unlist(map(strsplit(to_organise, "/"),1)),"/",
@@ -147,7 +168,7 @@ file.rename(paste0(renamed_location,"/", to_organise), #from
                    mapply('[[', strsplit(to_organise, "/"), 
                           lengths(strsplit(to_organise, "/")))))  
 
-### Remove empty 100RCNX, 101RCNX, etc. folders
+### Remove empty folders (e.g. 100RCNX, 101RCNX, etc.)
 
 # Get paths for empty folders
 for(i in 1: length(Folders))
