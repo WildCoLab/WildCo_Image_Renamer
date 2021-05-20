@@ -96,7 +96,7 @@ for(i in 1:length(Folders))
 {
   # Read in the files
   tmp.locs <- list.files(path = paste0(renamed_location, "//",Folders[i]),
-                         full.names = T, include.dirs = T)
+                         full.names = T, include.dirs = T, pattern = "\\.JPG$")
   # Replace colons with dashes
   tmp.exif <- read_exif(tmp.locs, tags = c("DateTimeOriginal"), recursive = F, quiet = TRUE)
   tmp.exif$DateTimeOriginal <- str_replace_all(tmp.exif$DateTimeOriginal, ":", "-")
