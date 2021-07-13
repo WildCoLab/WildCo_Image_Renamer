@@ -29,7 +29,7 @@ getwd()
 # If you are not working within  the "ImageRenamer.proj" project file - you will need to set a working directory.
 # However, we always recommend that you work inside of a project (for better reproducibility)!
 
-# Example of setting an external working directory: 
+# Example of setting an external working directory - this should link to the parent folder which contains your images: 
 #setwd("C:/Users/cbeirne/Dropbox/Sent files")
 #getwd() 
 
