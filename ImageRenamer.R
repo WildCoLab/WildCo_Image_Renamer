@@ -1,7 +1,6 @@
 ##########################################
-# WildCo Image Renaming.R
-# Updated Aug. 20, 2020 - Chris B
-#########################################
+# WildCo Image Renaming.R ################
+##########################################
 
 # YOU WILL NEED ADMINISTRATOR PRIVILEGES TO USE THIS SCRIPT #
 
@@ -19,18 +18,22 @@ library(stringr)
 library(R.utils)
 library(purrr)
 
-################################
-##### createStationFolders #####
-## Extract the list of station folders to be renames
+####################################################
+##### createStationFolders #########################
+####################################################
 
+## Extract the list of station folders to be renames
 
 # Check you have opened the script through the "ImageRenamer.proj" file. The following command should end in '/ImageRenamer' (or whatever you have renamed the project folder to be)
 getwd() 
 # If you are not working within  the "ImageRenamer.proj" project file - you will need to set a working directory.
-# However, I will always recommend that you work inside of a project (for better reproducibility)!
+# However, we always recommend that you work inside of a project (for better reproducibility)!
 
+# Example of setting an external working directory: 
+#setwd("C:/Users/cbeirne/Dropbox/Sent files")
+#getwd() 
 
-# The following two strings must be edited if you want to use a new folder
+# The following two strings must be edited if you want to use a data set other than the test images
 
 # Specify the folder images you want to rename (organised by station)
 to_be_renamed <- "Test_Images_Original"
@@ -47,7 +50,6 @@ keep_structure <- TRUE
 # If you want to remove that information and merge the images into one folder, specify FALSE
 #keep_structure <- FALSE
 
-################################
 ################################
 
 # Create a folder to copy the original images into
@@ -70,6 +72,8 @@ read_exif(test, tags = c("DateTimeOriginal"), recursive = F, quiet = TRUE)
 Folders <- list.dirs(path = renamed_location,
                      full.names = FALSE)
 
+########################################3
+
 # Remove the empty argument
 Folders <- Folders[Folders!=""]
 
@@ -91,7 +95,7 @@ for(i in 1: length(Folders))
 }
 Folders <- Folders[Folders!=""]
 
-##### imageRename #####
+##### imageRename ########################
 # Sometimes we have a lot of files and renaming can take a long time, so lets do this folder by folder 
 # This will enable you to see progress updates
 
@@ -181,7 +185,8 @@ file.rename(paste0(renamed_location,"/", to_organise), #from
                    mapply('[[', strsplit(to_organise, "/"), 
                           lengths(strsplit(to_organise, "/")))))  
 
-### Remove empty folders (e.g. 100RCNX, 101RCNX, etc.)
+######################################################
+### Remove remaining empty folders (e.g. 100RCNX, 101RCNX, etc.)
 
 # Get paths for empty folders
 for(i in 1: length(Folders))
