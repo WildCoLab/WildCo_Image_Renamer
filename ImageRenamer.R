@@ -23,11 +23,14 @@ library(purrr)
 ##### createStationFolders #####
 ## Extract the list of station folders to be renames
 
-# If you are not working within  the WildCo "Example Codes" project you will need to set a working directory. 
-# You *should* work inside the project though!
-getwd()
 
-# The following two must be edited if you want to use a new folder
+# Check you have opened the script through the "ImageRenamer.proj" file. The following command should end in '/ImageRenamer' (or whatever you have renamed the project folder to be)
+getwd() 
+# If you are not working within  the "ImageRenamer.proj" project file - you will need to set a working directory.
+# However, I will always recommend that you work inside of a project (for better reproducibility)!
+
+
+# The following two strings must be edited if you want to use a new folder
 
 # Specify the folder images you want to rename (organised by station)
 to_be_renamed <- "Test_Images_Original"
