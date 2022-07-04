@@ -65,7 +65,7 @@ test <- list.files(path = renamed_location,
 read_exif(test, tags = c("DateTimeOriginal"), recursive = F, quiet = TRUE)
 
 # You should see a tibble containing the file names and DateTimeOriginal
-# If this doesnt work - check your exif installation!
+# If this doesn't work - check your exif installation!
 
 
 # Get a list of the folders to be renamed
