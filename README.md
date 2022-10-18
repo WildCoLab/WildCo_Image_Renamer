@@ -3,7 +3,7 @@ A tool to rename images and extract timelapse files.
 
 ## How to use this tool
 
-After photos have been blurred, or for projects without this obligation, all files should be renamed to the designated metadata standard using the ImageRenamer.R then extract the Timelapse images using TimelapseExtractor.R.
+All files should be renamed to the designated metadata standard using the ImageRenamer.R then extract the Timelapse images using TimelapseExtractor.R.
 
 To use this tool, download this repository as a zip file, extract it to a convinent location and follow the steps described in the .R file.
 
