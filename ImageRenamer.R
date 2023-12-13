@@ -14,6 +14,7 @@ library(exifr)
 
 #install.packages("stringr")
 library(stringr)
+library(strex)
 #install.packages("R.utils")
 library(R.utils)
 library(purrr)
@@ -134,7 +135,7 @@ for(i in 1:length(Folders))
     for(j in 1:length(dups))
     {
       n.dups <- length(new.names[new.names==dups[j]])
-      new.names[new.names==dups[j]] <- paste0(sub("[.].*", "", new.names[new.names==dups[j]]),"_",1:n.dups, ".jpg")
+      new.names[new.names==dups[j]] <- paste0(str_before_last_dot(new.names[new.names==dups[j]]),"_",1:n.dups, ".jpg")
     }
   }
   
